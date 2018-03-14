@@ -5,7 +5,7 @@ from math import sin, pi, asin, tan, atan, sqrt
 import cv2
 
 
-img = cv2.imread("file1.jpg", cv2.IMREAD_COLOR)
+img = cv2.imread("image.jpg", cv2.IMREAD_COLOR)
 
 phase1 = 0.0
 phase2 = 0.0
@@ -15,7 +15,7 @@ A = 32767.0
 f = 1.0
 
 sampleRate = 44100.0 						
-wavef = wave.open('rough.wav','w')
+wavef = wave.open('signal.wav','w')
 wavef.setnchannels(1) # mono
 wavef.setsampwidth(2) 
 wavef.setframerate(sampleRate)
