@@ -1,22 +1,22 @@
-from __future__ import division
+from __future__ import division									# Else division doesn't give values after decimal
 import wave
 import struct
 from math import sin, pi, asin, tan, atan, sqrt
 import cv2
 
 
-img = cv2.imread("image.jpg", cv2.IMREAD_COLOR)
+img = cv2.imread("image.jpg", cv2.IMREAD_COLOR)					# Our source image is image.jpg in the same folder
 
-phase1 = 0.0
-phase2 = 0.0
+phase1 = 0.0													# Saves value of second last data point of sine wave
+phase2 = 0.0													# Saves value of second last data point of sine wave
 flag = 1
 error = 0.0
-A = 32767.0
+A = 32767.0														# This corresponds to amplitude of 1 on actual scale
 f = 1.0
 
-sampleRate = 44100.0 						
-wavef = wave.open('signal.wav','w')
-wavef.setnchannels(1) # mono
+sampleRate = 44100.0 											# This is the sampling rate of the wave,i.e., number of samples per second
+wavef = wave.open('signal.wav','w')								# Our destination wave file is signal.wav in the same folder
+wavef.setnchannels(1) 											# 1 is mono and 2 is stereo
 wavef.setsampwidth(2) 
 wavef.setframerate(sampleRate)
 
@@ -26,12 +26,14 @@ def genwave(frequency, duration):
 	sample = duration * sampleRate  * 1.0
 	error += sample - int(sample)
 
-	if (error < 1):
+	# Calculating error in samples and adding them to wave to prevent them from accumulating
+	if (error < 1):												
 		n = int(sample)
 	else:
 		n = int(sample) + 1
 		error -= 1
 
+	# Updating amplitude of next wave to match slope correctly
 	if f == 1.0:
 		A = 32767.0
 	else:
@@ -40,9 +42,10 @@ def genwave(frequency, duration):
 		else:
 			A *= f/frequency
 
-	if A > 32767.0 :
+	if A > 32767.0 :								# Maximum amplitude of wave is limited
 		A = 32767.0
 			
+	# Finding corresponding region of wave for phase calculation of next wave
 	for i in range(n):
 		if i == 0:
 			if ((phase2 - phase1) >= 0 and phase1 >= 0):
@@ -58,6 +61,7 @@ def genwave(frequency, duration):
 				if phase2 >= 0:
 					flag = 6
 			
+		# Finding value of the data points
 		if flag == 1:
 			value = int(A * sin((2 * frequency * pi *float(i)/float(sampleRate)) + atan((frequency/f)* tan(asin(phase2)))))
 		elif flag == 2:
@@ -72,8 +76,8 @@ def genwave(frequency, duration):
 			value = int(A * sin((2 * frequency * pi *float(i)/float(sampleRate))))
 
 
-		data = struct.pack('<h', value)
-		wavef.writeframesraw( data )
+		data = struct.pack('<h', value)									# Packing value of data in short int format - 2 bytes per data
+		wavef.writeframesraw( data )									# Writing data in the file
 
 		if i == n - 2:
 			phase1 = value / 32767.0
@@ -132,11 +136,3 @@ wavef.writeframes('')
 wavef.close()
 
 # VIS Code - 1001100 ( 76d)
-
-
-
-# Changes that need to be assured after editing... found in debugging
-
-# sinval = phase2 / A
-# phi2 = atan((frequency/f)*tan(asin(sinval)))
-# A2 = phase2 / sin(atan((frequency/f)*tan(asin(phase2/A))))
