@@ -1,5 +1,5 @@
-char var;
-int flag = 0;
+char var, opt;
+int b, g, r;
 
 void setup() {
   // put your setup code here, to run once:
@@ -12,32 +12,41 @@ void loop() {
   if (Serial.available() > 0)
   {
     var = Serial.read();
-    if (var == 'b')                                                   // Was not working when directly using Serial.read() == 'b'
+    if (var == 'r')                                                   // Was not working when directly using Serial.read() == 'b'
     {
-      digitalWrite(LED_BUILTIN, HIGH);
-      delay(1000);
+      opt = Serial.read();
+      if (opt == 'x')
+        Serial.write(10);
+      delay(500);
+      opt = Serial.read();
+      if (var == 'y')
+        Serial.write(10);
+      delay(500);
+
+      b = Serial.read(); 
+      g = Serial.read(); 
+      r = Serial.read(); 
+      
     }
 
     if (var == 's')
     {
       digitalWrite(LED_BUILTIN, HIGH);
-      delay(10000);
+      delay(1000);
     }
 
-    if (var == 'p')
-    {
-      flag = 1;
-    }
   }
 
   else
   {
      digitalWrite(LED_BUILTIN, LOW);
-      if (flag == 1)
-      {
-         Serial.print(var);
-         flag = 0;
-      }
+     Serial.print(" b is ");
+     Serial.print(b);
+     Serial.print(" g is ");
+     Serial.print(g);
+     Serial.print(" r is ");
+     Serial.print(r);
+      
 
   }
 
