@@ -2,22 +2,13 @@ import serial
 import cv2
 import time
 
-uno = serial.Serial('com6', 9600)
-
-def receive (x, y): 
-	time.sleep(1)
-	uno.write('x')
-	x = uno.read(1)
-	time.sleep(1)
-	uno.write('y')
-	y = uno.read(1)
-	send(x, y)
+uno = serial.Serial('com3', 9600)
 
 def send (x, y):
-	img = cv2.imread("cv2.jpg", cv2.IMREAD_COLOR)
-	b = img[x, y][0]
-	g = img[x, y][1]
-	r = img[x, y][2]
+	img = cv2.imread("image.jpg", cv2.IMREAD_COLOR)
+	b = img[x, y, 0]
+	g = img[x, y, 1]
+	r = img[x, y, 2]
 	time.sleep(0.5)
 	uno.write(b)
 	time.sleep(0.5)
@@ -29,10 +20,20 @@ var = 'a'
 
 while var != 'q' :
 	var = raw_input("Enter the command ")
-	time.sleep(1)
+	#time.sleep(1)
 	uno.write(var)
 	if var == 'r' :
-		receive(x, y)
+		#time.sleep(1)
+		#uno.write('x')
+		while uno.in_waiting == 0:
+			continue
+			#r = uno.read(100)
+		x = uno.read()
+		y = uno.read()
+		print x
+		print "Now y "
+		print y
+		#send(int(x), int(y))
 		
 	
 '''
