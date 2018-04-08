@@ -1,5 +1,6 @@
 char var, opt;
 int b, g, r;
+int flag=0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -9,23 +10,38 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  /*while (1){
+        Serial.print(20, DEC);
+        delay(100);
+  }*/
+
+  if (flag==0){
+    Serial.print(20, DEC);
+    flag=1;
+}
+Serial.print(40, DEC);
   if (Serial.available() > 0)
   {
+     if (flag==0){
+        Serial.write("20");
+        flag=1;
+    }
+Serial.write("40");
+    
+  }
+    /*while (1)
+        Serial.write('a');
     var = Serial.read();
     if (var == 'r')                                                   // Was not working when directly using Serial.read() == 'b'
     {
-      opt = Serial.read();
-      if (opt == 'x')
-        Serial.write(10);
-      delay(500);
-      opt = Serial.read();
-      if (var == 'y')
-        Serial.write(10);
-      delay(500);
-
-      b = Serial.read(); 
-      g = Serial.read(); 
-      r = Serial.read(); 
+      //Serial.print(10, DEC);
+      //Serial.print(10, DEC);
+      delay(15);
+      while (1)
+          Serial.write('a');
+      //b = Serial.read(); 
+      //g = Serial.read(); 
+      //r = Serial.read(); 
       
     }
 
@@ -49,7 +65,7 @@ void loop() {
       
 
   }
-
+*/
  
   /*
   digitalWrite(13, HIGH);
